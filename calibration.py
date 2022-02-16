@@ -1,7 +1,7 @@
 import cv2 
 import mediapipe as mp
 from hand import Hand
-from Scissor import Scissor
+from simple_pinch import SimplePinch
 from geom_tools import distance_xyz
 
 class Calibrate():
@@ -28,8 +28,53 @@ class Calibrate():
         self.lowest_pressure = 0
         self.highest_pressure = 0
         self.counter = 0
+        self.calibrated = False
 
-        self.scissor = Scissor()
+        self.pinch = SimplePinch()
+
+    def display_instruction(self, image):
+        overlay = image.copy()
+        cv2.rectangle(overlay,(45,20),(480,60),(255,255,255),cv2.FILLED)
+        alpha = 0.5
+        cv2.addWeighted(overlay, alpha, image, 1 - alpha, 0, image)
+        msg = "Raise dominant hand to calibrate pressure"
+        cv2.putText(image,msg,(50,50),cv2.FONT_HERSHEY_SIMPLEX,0.6,(0,0,0),2)
+
+    def calibrate(self,image, palm_height):
+        overlay = image.copy()
+        cv2.rectangle(overlay,(45,20),(500,90),(255,255,255),cv2.FILLED)
+        alpha = 0.6
+        cv2.addWeighted(overlay, alpha, image, 1 - alpha, 0, image)
+        msg1 = "do one pinch at 0 depth, then one pinch at max depth"
+        cv2.putText(image,msg1,(50,50),cv2.FONT_HERSHEY_SIMPLEX,0.5,(0,0,255),2)
+
+        calibrate = False
+        if self.rightHand.index_base.x != 0:
+            self.pinch.run(self.rightHand)
+            calibrate = self.pinch.clicked
+        
+        if calibrate:
+            self.counter += 1
+        
+            if self.counter == 2:
+                if self.lowest_pressure == 0:
+                    self.lowest_pressure = palm_height
+
+                else:
+                    self.highest_pressure = palm_height
+
+        else:
+            self.counter = 0
+
+        if self.lowest_pressure == 0 or self.highest_pressure == 0:
+            self.calibrated = False 
+        else:
+            self.calibrated = True
+
+        msg2 = "min: " + str(round(self.lowest_pressure,5)) + "      max: " + str(round(self.highest_pressure,5))
+        cv2.putText(image,msg2,(50,80),cv2.FONT_HERSHEY_SIMPLEX,0.5,(0,0,255),2)
+
+
 
     def calibrate_pressure(self):
         while self.cap.isOpened():
@@ -47,6 +92,9 @@ class Calibrate():
             "Right": None
             }
 
+            if not camdata.multi_handedness and self.highest_pressure == 0:
+                self.display_instruction(image)
+
             if camdata.multi_handedness:  # If hand(s) present in frame
                 for i in range(0, len(camdata.multi_handedness)):  # For each hand
 
@@ -59,29 +107,15 @@ class Calibrate():
 
                 palm_height = distance_xyz(self.rightHand.middle_base, self.rightHand.wrist)
 
-                if self.lowest_pressure == 0 or self.highest_pressure == 0:
-                    calibrate = False
-                    if self.rightHand.index_base.x != 0:
-                        self.scissor.run(self.rightHand)
-                        calibrate = self.scissor.clicked
-                    
-                    if calibrate:
-                        self.counter += 1
-                    
-                    if self.counter == 1:
-                        self.lowest_pressure = palm_height
-
-                    if self.counter == 10:
-                        self.highest_pressure = palm_height
-
-            title_text = "Calibrating Pressure"
-            cv2.putText(image,title_text,(50,50),cv2.FONT_HERSHEY_SIMPLEX,1,(255,0,0),3)
-
-            text = str(self.lowest_pressure) + ", " + str(self.highest_pressure)
-            cv2.putText(image,text,(50,80),cv2.FONT_HERSHEY_SIMPLEX,0.8,(255,0,0),2)
+                if not self.calibrated:
+                    self.calibrate(image, palm_height)
+                else:
+                    msg = "Depth calibration done"
+                    cv2.putText(image,msg,(50,50),cv2.FONT_HERSHEY_SIMPLEX,0.6,(0,127,0),2)
             
-            cv2.imshow('Hand Tracking', image)
-            if cv2.waitKey(1) & 0xFF == ord('q'):
+            cv2.imshow('Digital Inking', image)
+            cv2.waitKey(1)
+            if cv2.getWindowProperty("Digital Inking", cv2.WND_PROP_VISIBLE) < 1:
                 break
 
         self.cap.release()
