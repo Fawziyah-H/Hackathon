@@ -1,0 +1,169 @@
+{
+    "ModulesActivated": [
+        "Head"
+    ],
+    "cursorControl": "Hand",
+    "HandModSettings": {
+        "useCase": "classic",
+        "nHands": "2",
+        "handedness": "Right",
+        "sensitivity": 0.15,
+        "smoothness": 5,
+        "scrollSpeed": 0.1,
+        "drawWithIndex": true
+    },
+    "ScreenConfig": {
+        "arrangement": "SingleScreen"
+    },
+    "HeadSettings": {
+        "screenOnTop": false,
+        "instructVisibility": true
+
+    },
+    "EyesSettings": {
+        "screen_h": 27.4,
+        "screen_w": 48.7,
+        "camera_h": 4.5,
+        "ave_gaze": 5,
+        "ave_nose": 10,
+        "distance_bias": 30,
+        "ys_calibrate": 4,
+        "y_coefficient": 1,
+        "y_x_coefficient": 0.01,
+        "x_l_coefficient": 1.33,
+        "x_r_coefficient": 0.75,
+        "x_bias": 0,
+        "x_r_y_coefficient": 0.001,
+        "Show_Head_Position_output": false,
+        "Show_Landmark_detection_output": false,
+        "Show_Gaze_estimation_output": true
+    },
+    "BodySettings": {
+        "Selected": ["noequipment"],
+        "DefaultExercisesNoEquipment": {
+            "walking": {
+                "states": {
+                    "walking_left": 1,
+                    "walking_right": 1
+                },
+                "status": "False",
+                "action": "Key Down",
+                "key": "w",
+                "count": 1
+            },
+            "squating": {
+                "states": {
+                    "squating_down": 1
+                },
+                "status": "False",
+                "action": "Left click",
+                "key": "space",
+                "count": 1
+            },
+            "situp": {
+                "states": {
+                    "situp_up": 1
+                },
+                "status": "False",
+                "action": "Key Down",
+                "key": "b",
+                "count": 1
+            },
+            "pushup": {
+                "states": {
+                    "pushup_up": 0,
+                    "pushup_down": 1
+                },
+                "status": "False",
+                "action": "Key Down",
+                "key": "w",
+                "count": 1
+            },
+            "mountainClimber": {
+                "states": {
+                    "mountainClimber_left": 1,
+                    "mountainClimber_right": 1
+                },
+                "status": "True",
+                "action": "Key Down",
+                "key": "w",
+                "count": 1
+            }
+        },
+        "DefaultExercisesEquipment": {
+            "cycling": {
+                "states": {
+                    "cycling_left": 1,
+                    "cycling_right": 1
+                },
+                "status": "False",
+                "action": "Key Down",
+                "key": "w",
+                "count": 1
+            },
+            "rowing": {
+                "states": {
+                    "rowing_in": 0,
+                    "rowing_out": 1
+                },
+                "status": "False",
+                "action": "Key Down",
+                "key": "w",
+                "count": 1
+            }
+        },
+        "CustomisedExercises": {},
+        "ExtremityTriggers": {
+            "armleft": {
+                "status": "False",
+                "landmark": "left_wrist",
+                "coordinates": [410,209],
+                "action": "Left Click",
+                "key": "a"
+            },
+            "armright": {
+                "status": "False",
+                "landmark": "right_wrist",
+                "coordinates": [122,197],
+                "action": "Key Down",
+                "key": "d"
+            },
+            "up": {
+                "status": "False",
+                "landmark": "nose",
+                "coordinates": [270,29],
+                "action": "Key Down",
+                "key": "s"
+            },
+            "punchleft": {
+                "status": "False",
+                "landmark": "left_wrist",
+                "coordinates": [100,100],
+                "action": "Key Press",
+                "key": "a"
+            },
+            "punchright": {
+                "status": "False",
+                "landmark": "right_wrist",
+                "coordinates": [100,100],
+                "action": "Key Press",
+                "key": "a"
+            },
+            "kickleft": {
+                "status": "False",
+                "landmark": "left_ankle",
+                "coordinates": [100,100],
+                "action": "Key Press",
+                "key": "a"
+            },
+            "kickright": {
+                "status": "False",
+                "landmark": "right_ankle",
+                "coordinates": [100,100],
+                "action": "Key Press",
+                "key": "a"
+            }
+        },
+        "CustomisedExtremityTriggers": {}
+    }
+}
