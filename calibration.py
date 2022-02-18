@@ -119,9 +119,9 @@ class Calibrate():
                     msg = "Depth calibration done"
                     cv2.putText(image,msg,(50,50),cv2.FONT_HERSHEY_SIMPLEX,0.6,(0,127,0),2)
             
-            cv2.imshow('Digital Inking', image)
+            cv2.imshow('Digital Inking - Calibration', image)
             cv2.waitKey(1)
-            if cv2.getWindowProperty("Digital Inking", cv2.WND_PROP_VISIBLE) < 1:
+            if cv2.getWindowProperty("Digital Inking - Calibration", cv2.WND_PROP_VISIBLE) < 1:
                 break
 
         self.cap.release()
