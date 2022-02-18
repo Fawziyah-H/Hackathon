@@ -7,7 +7,7 @@ from geom_tools import distance_xyz
 
 class DigitalInking():
 
-    def __init__(self, lowest_pressure, highest_pressure):
+    def __init__(self, lowest_pressure, highest_pressure, dominant):
         self.cap = cv2.VideoCapture(0,cv2.CAP_DSHOW)
         self.cap.set(3, 640)
         self.cap.set(4, 480)
@@ -17,14 +17,19 @@ class DigitalInking():
         "Right": None
         }
 
+        self.dominant = dominant
+
         self.hands = mp.solutions.hands.Hands(
                 min_detection_confidence=0.6,
                 min_tracking_confidence=0.6,
                 max_num_hands=1,
             )
 
-        self.rightHand = Hand(self.handdata_raw['Right'])
-        self.leftHand = Hand(self.handdata_raw['Left'])
+        if self.dominant == "Right":
+            self.domHand = Hand(self.handdata_raw['Right'])
+        elif self.dominant == "Left":
+            self.domHand = Hand(self.handdata_raw['Left'])
+        #NOTE might need else statement for invalid domHand value?
 
         self.counter = 0
 
@@ -55,9 +60,9 @@ class DigitalInking():
                         camdata.multi_handedness[i].classification[0].label
                     ] = camdata.multi_hand_landmarks[i]
                 
-                self.rightHand.update(handdata_raw['Right'])
+                self.domHand.update(handdata_raw[self.dominant])
 
-                palm_height = distance_xyz(self.rightHand.middle_base, self.rightHand.wrist)
+                palm_height = distance_xyz(self.domHand.middle_base, self.domHand.wrist)
                 
                 depth_range = self.highest_pressure - self.lowest_pressure
                 increment = depth_range / 1024
@@ -70,11 +75,11 @@ class DigitalInking():
                     new_pressure = (palm_height - self.lowest_pressure) / increment
 
                 clicked = False
-                if self.rightHand.index_base.x != 0:
-                    self.pinch.run(self.rightHand)
+                if self.domHand.index_base.x != 0:
+                    self.pinch.run(self.domHand)
                     clicked = self.pinch.clicked
 
-                self.mouse.update_desktop_cursor(self.rightHand.index_tip.x*640, self.rightHand.index_tip.y*480)
+                self.mouse.update_desktop_cursor(self.domHand.index_tip.x*640, self.domHand.index_tip.y*480)
                 self.mouse.update_pressure(int(new_pressure))
                 self.mouse.update_desktop_click_events(clicked,False,False,False)
 

@@ -6,10 +6,12 @@ from geom_tools import distance_xyz
 
 class Calibrate():
 
-    def __init__(self):
+    def __init__(self, dominant):
         self.cap = cv2.VideoCapture(0,cv2.CAP_DSHOW)
         self.cap.set(3, 640)
         self.cap.set(4, 480)
+
+        self.dominant = dominant
 
         self.handdata_raw = {
         "Left": None,
@@ -22,8 +24,12 @@ class Calibrate():
                 max_num_hands=1,
             )
 
-        self.rightHand = Hand(self.handdata_raw['Right'])
-        self.leftHand = Hand(self.handdata_raw['Left'])
+        if self.dominant == "Right":
+            self.domHand = Hand(self.handdata_raw['Right'])
+        elif self.dominant == "Left":
+            self.domHand = Hand(self.handdata_raw['Left'])
+        #NOTE might need else statement for invalid domHand value?
+
 
         self.lowest_pressure = 0
         self.highest_pressure = 0
@@ -49,8 +55,8 @@ class Calibrate():
         cv2.putText(image,msg1,(50,50),cv2.FONT_HERSHEY_SIMPLEX,0.5,(0,0,255),2)
 
         calibrate = False
-        if self.rightHand.index_base.x != 0:
-            self.pinch.run(self.rightHand)
+        if self.domHand.index_base.x != 0:
+            self.pinch.run(self.domHand)
             calibrate = self.pinch.clicked
         
         if calibrate:
@@ -103,9 +109,9 @@ class Calibrate():
                         camdata.multi_handedness[i].classification[0].label
                     ] = camdata.multi_hand_landmarks[i]
                 
-                self.rightHand.update(handdata_raw['Right'])
+                self.domHand.update(handdata_raw[self.dominant])
 
-                palm_height = distance_xyz(self.rightHand.middle_base, self.rightHand.wrist)
+                palm_height = distance_xyz(self.domHand.middle_base, self.domHand.wrist)
 
                 if not self.calibrated:
                     self.calibrate(image, palm_height)
