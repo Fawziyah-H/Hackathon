@@ -1,15 +1,20 @@
 from tkinter import *
 import tkinter.font as font
 import tkinter.ttk as tkk
+from turtle import back
 from calibration import Calibrate
 from inking import DigitalInking
+import tkinter.scrolledtext as st
 
 
 #default values for settings
 low = 0.15
 high = 0.25
 domHand = "Right"
-
+bgcolour = '#A4DEFF'
+btncolour = '#FFF0F5'
+titleFont = "Freestyle Script"
+btnFont = "Calibri"
 
 #consulted https://www.geeksforgeeks.org/tkinter-application-to-switch-between-different-page-frames/
 class Menu(Tk):
@@ -18,16 +23,17 @@ class Menu(Tk):
         container = Frame(self)
         container.pack(fill=BOTH,expand=1)
         self.wm_title("Digital Inking with Gesture Recognition")
-        self.geometry("500x400")
+        self.geometry("800x600")
 
         container.grid_rowconfigure(0, weight = 1)
         container.grid_columnconfigure(0, weight = 1)
 
 
         self.frames = {}
-        pages = (MainMenu, SettingPage)
+        pages = (MainMenu, SettingPage, HelpPage)
         for F in pages:
             frame = F(container,self)
+            frame['bg'] = bgcolour
             self.frames[F] = frame
             frame.grid(row = 0, column = 0, sticky ="nsew")
 
@@ -41,20 +47,18 @@ class Menu(Tk):
 class MainMenu(Frame):
     def __init__(self, parent, controller):
         Frame.__init__(self,parent)
-        #self.low = 0
-        #self.high = 0
 
-        title = tkk.Label(self, text="Digital Inking", font=("Verdana",35))
-        title.grid(row = 0, column = 4, padx = 10, pady = 10)
+        title = tkk.Label(self, text="Digital Inking", font=(titleFont,70), background=bgcolour)
+        title.place(x=200,y=40)
 
-        inkingButton = Button(self, text="Start Inking", command=self.startInking)
-        inkingButton['font'] = font.Font(size=20)
-        inkingButton.grid(row = 1, column = 4, padx = 10, pady = 10)
-        #inkingButton.place(x=150, y=200)
+        inkingButton = Button(self, text="Start Inking", command=self.startInking, background=btncolour, font=(btnFont,20))
+        inkingButton.place(x=300, y=210)
 
-        settingsBtn = Button(self,text="Settings",command=lambda: controller.showFrame(SettingPage))
-        settingsBtn['font'] = font.Font(size=20)
-        settingsBtn.grid(row = 2, column = 4, padx = 10, pady = 10)
+        settingsBtn = Button(self,text="Settings",command=lambda: controller.showFrame(SettingPage), background=btncolour, font=(btnFont,20))
+        settingsBtn.place(x=325,y=310)
+
+        helpBtn = Button(self,text="Help",command=lambda: controller.showFrame(HelpPage), background=btncolour, font=(btnFont,20))
+        helpBtn.place(x=350,y=410)
 
     def startInking(self):
         global high,low,domHand
@@ -69,31 +73,28 @@ class SettingPage(Frame):
         Frame.__init__(self,parent)
         global domHand
 
-        title = tkk.Label(self, text="Settings", font=("Verdana",35))
-        title.grid(row = 0, column = 2, padx = 10, pady = 10)
-        calibrateButton = Button(self, text="Calibrate Pressure",command=self.clickCalibrate)
-        calibrateButton['font'] = font.Font(size=20)
-        calibrateButton.grid(row = 2, column = 2, padx = 10, pady = 10)
+        title = tkk.Label(self, text="Settings", font=("Segoe Print",45), background=bgcolour)
+        title.place(x=250,y=30)
+
+        calibrateButton = Button(self, text="Calibrate Pressure",command=self.clickCalibrate, background=btncolour, font=(btnFont,20))
+        calibrateButton.place(x=265,y=220)
 
         self.selected = StringVar()
         self.selected.set(domHand)
-        domHandFrm = tkk.LabelFrame(self)
-        domHandFrm['text'] = "Dominant Hand"
-        leftHand = tkk.Radiobutton(domHandFrm,text="Left",value="Left",variable=self.selected, command=self.selectDomHand)
+        domHandFrm = LabelFrame(self,text="Dominant Hand", font=("Verdana",15), bg=btncolour)
+        leftHand = Radiobutton(domHandFrm,text="Left",font=("Verdana",12),bg=btncolour,value="Left",variable=self.selected, command=self.selectDomHand)
         leftHand.grid(column=0, row=0, padx=5, pady=5)
-        rightHand = tkk.Radiobutton(domHandFrm,text="Right",value="Right",variable=self.selected, command=self.selectDomHand)
+        rightHand = Radiobutton(domHandFrm,text="Right",value="Right",font=("Verdana",12),bg=btncolour,variable=self.selected, command=self.selectDomHand)
         rightHand.grid(column=1, row=0, padx=5, pady=5)
-        domHandFrm.grid(row = 3, column = 2, padx = 10, pady = 10)
+        domHandFrm.place(x=300,y=350)
 
-
-        backBtn = Button(self, text="Back", command=lambda: controller.showFrame(MainMenu))
-        backBtn.grid(row = 4, column = 1, padx = 10, pady = 10)
+        backBtn = Button(self, text="Back", command=lambda: controller.showFrame(MainMenu), background=btncolour, font=(btnFont,12))
+        backBtn.place(x=50,y=500)
 
         
     def selectDomHand(self):
         global domHand
         domHand = self.selected.get()
-        #print("New dom:", str(domHand))
     
     def clickCalibrate(self):
         global high,low,domHand
@@ -101,6 +102,21 @@ class SettingPage(Frame):
         cal.calibrate_pressure()
         low = cal.get_low()
         high = cal.get_high()
+
+class HelpPage(Frame):
+    def __init__(self, parent, controller):
+        Frame.__init__(self,parent)
+        title = tkk.Label(self, text="Help", font=("Segoe Print",45), background=bgcolour)
+        title.place(x=300,y=30)
+
+        backBtn = Button(self, text="Back", command=lambda: controller.showFrame(MainMenu), background=btncolour, font=(btnFont,12))
+        backBtn.place(x=50,y=500)
+
+        txt = st.ScrolledText(self, width=30, height=10, font=("Verdana",15)) #, state='disabled')
+        txt.place(x=150,y=150)
+        txt.insert(INSERT, "How to use:")
+        txt.configure(state='disabled')
+
 
 """
 class Window(Frame):
