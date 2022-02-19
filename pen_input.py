@@ -175,8 +175,13 @@ class Pen():
 
         self.mousejiggle(coordinates)
 
-    def pendown(self,coordinates:Array, pressure):
+    def pendown(self,coordinates:Array, pressure, erase):
         '''Initialises a pen down event for ink strokes/drag events'''
+        if erase is True:
+            self.pointerTypeInfo.DUMMYUNIONNAME.penInfo.penFlags = self.PEN_FLAG_ERASER
+        else:
+            self.pointerTypeInfo.DUMMYUNIONNAME.penInfo.penFlags = self.PEN_FLAG_NONE
+        
         x=coordinates[0]
         y=coordinates[1]
 

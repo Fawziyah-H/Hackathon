@@ -3,6 +3,7 @@ import mediapipe as mp
 from desktop_pen import DesktopPenInput
 from hand import Hand
 from simple_pinch import SimplePinch
+from middle_pinch import MiddlePinch
 from geom_tools import distance_xyz
 from win32api import GetSystemMetrics
 from win32con import SM_CXVIRTUALSCREEN, SM_CYVIRTUALSCREEN
@@ -39,6 +40,7 @@ class DigitalInking():
         self.counter = 0
 
         self.pinch = SimplePinch()
+        self.middlePinch = MiddlePinch()
         self.mouse = DesktopPenInput()
 
         self.highest_pressure = highest_pressure
@@ -80,16 +82,19 @@ class DigitalInking():
                     new_pressure = (palm_height - self.lowest_pressure) / increment
 
                 clicked = False
+                eraser = False
                 if self.domHand.index_base.x != 0:
                     self.pinch.run(self.domHand)
+                    self.middlePinch.run(self.domHand)
                     clicked = self.pinch.clicked
+                    eraser = self.middlePinch.clicked
 
                 newX = self.domHand.index_tip.x * self.screen_width
                 newY = self.domHand.index_tip.y * self.screen_height
 
                 self.mouse.update_desktop_cursor(newX,newY)
                 self.mouse.update_pressure(int(new_pressure))
-                self.mouse.update_desktop_click_events(clicked,False,False,False)
+                self.mouse.update_desktop_click_events(clicked,False,False,False,eraser)
 
             cv2.imshow('Digital Inking', image)
             cv2.waitKey(1)

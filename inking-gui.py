@@ -1,16 +1,14 @@
 from tkinter import *
-import tkinter.font as font
 import tkinter.ttk as tkk
-from turtle import back
 from calibration import Calibrate
 from inking import DigitalInking
-import tkinter.scrolledtext as st
-
 
 #default values for settings
 low = 0.15
 high = 0.25
 domHand = "Right"
+
+#fonts and colours used
 bgcolour = '#A4DEFF'
 btncolour = '#FFF0F5'
 titleFont = "Freestyle Script"
@@ -27,7 +25,6 @@ class Menu(Tk):
 
         container.grid_rowconfigure(0, weight = 1)
         container.grid_columnconfigure(0, weight = 1)
-
 
         self.frames = {}
         pages = (MainMenu, SettingPage, HelpPage)
@@ -62,9 +59,6 @@ class MainMenu(Frame):
 
     def startInking(self):
         global high,low,domHand
-        """if low == 0 and high == 0:
-            low = 0.15
-            high = 0.25"""
         inking = DigitalInking(low,high,domHand)
         inking.ink()
 
@@ -90,8 +84,7 @@ class SettingPage(Frame):
 
         backBtn = Button(self, text="Back", command=lambda: controller.showFrame(MainMenu), background=btncolour, font=(btnFont,12))
         backBtn.place(x=50,y=500)
-
-        
+   
     def selectDomHand(self):
         global domHand
         domHand = self.selected.get()
@@ -107,14 +100,14 @@ class HelpPage(Frame):
     def __init__(self, parent, controller):
         Frame.__init__(self,parent)
         title = tkk.Label(self, text="Help", font=("Segoe Print",45), background=bgcolour)
-        title.place(x=300,y=30)
+        title.place(x=300,y=25)
 
         backBtn = Button(self, text="Back", command=lambda: controller.showFrame(MainMenu), background=btncolour, font=(btnFont,12))
         backBtn.place(x=50,y=500)
 
-        txt = st.ScrolledText(self, width=30, height=10, font=("Verdana",15)) #, state='disabled')
+        txt = Text(self, width=30, height=10, font=("Calibri",15), bg=bgcolour, bd=0)
         txt.place(x=150,y=150)
-        txt.insert(INSERT, "How to use:")
+        txt.insert(INSERT, "How to use:\n\n1.Calibrate pressure\n2.Start inking!\n3.Enjoy!")
         txt.configure(state='disabled')
 
 
@@ -133,7 +126,6 @@ class Window(Frame):
         self.low = 0
         self.high = 0
 """
-
     
 app = Menu()   
 app.mainloop()

@@ -92,7 +92,8 @@ class DesktopPenInput:
         self.prev_cursor_active = self.cursor_active
 
 
-    def click_events(self, is_left_clicked, is_right_clicked, is_double_clicked, is_panning):
+    def click_events(self, is_left_clicked, is_right_clicked, is_double_clicked, is_panning, is_erase):
+        self.erase = is_erase
 
         '''This will continue a drag or ink stroke with updated coordinates and pressure'''
         if self.drag is True:
@@ -101,7 +102,7 @@ class DesktopPenInput:
         '''Panning using multitouch - works beautifully!'''
         if is_panning:
             second_touch = (self.cursor.position[0] + 2*self.finger_radius,self.cursor.position[1])
-            self.penInput.pendown([self.cursor.position,second_touch])
+            self.penInput.pendown([self.cursor.position,second_touch], self.erase)
 
         """This will determine by frame  if the left-click will be a drag or a click"""
         if is_left_clicked is True:
@@ -133,15 +134,15 @@ class DesktopPenInput:
 
         """This will initialise Drag event when pinch length is more than 6 frames and self.drag is currently False"""
         if is_left_clicked is True and is_right_clicked is False and self.drag is False and self.left_click_counter > 6:
-            self.penInput.pendown(self.cursor.position, self.pressure)
+            self.penInput.pendown(self.cursor.position, self.pressure, self.erase)
             self.drag = True
 
         self.last_is_double_clicked = is_double_clicked
         self.last_is_left_clicked = is_left_clicked
         self.last_is_right_clicked = is_right_clicked
 
-    def update_desktop_click_events(self, is_left_clicked, is_right_clicked, is_double_clicked, is_panning):
-        self.click_events(is_left_clicked, is_right_clicked, is_double_clicked, is_panning)
+    def update_desktop_click_events(self, is_left_clicked, is_right_clicked, is_double_clicked, is_panning, is_erase):
+        self.click_events(is_left_clicked, is_right_clicked, is_double_clicked, is_panning, is_erase)
 
     def update_desktop_cursor(self, x, y,cursor_is_active:bool=True):
         self.update_cursor_xy(x, y,cursor_is_active)
