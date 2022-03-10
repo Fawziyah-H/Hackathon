@@ -112,22 +112,6 @@ class HelpPage(Frame):
             \n4. To draw, pinch your thumb and index finger and move your hand\n5. To use eraser, pinch your middle finger and thumb")
         txt.configure(state='disabled')
 
-
-"""
-class Window(Frame):
-
-    def __init__(self, master=None):
-        Frame.__init__(self, master)        
-        self.master = master
-
-        # widget can take all window
-        self.pack(fill=BOTH, expand=1)
-
-        self.myFont = font.Font(size=20)
-
-        self.low = 0
-        self.high = 0
-"""
     
 app = Menu()   
 app.mainloop()

@@ -44,13 +44,11 @@ class DesktopPenInput:
         self.offhand_ref_point = [0, 0]             # Point which measured pixel movement for the offhand is relative to
         self.window_ref_point = [0, 0]              # Point at which the second touch will be made relative to
 
-
         self.cursor_buffer_x = []
         self.cursor_buffer_y = []
 
         self.cursor = Controller()
 
-        self.prev = []                              # the previous cursor position
 
         pyautogui.FAILSAFE = False
 
@@ -76,8 +74,6 @@ class DesktopPenInput:
             # new coordinates are last known position of mouse + a vector (i.e: relative movement from the reactivated hand position)
             x_new = self.origin[0] + (x-self.reactivated_hand_position[0])*self.mouse_sensitivity
             y_new = self.origin[1] + (y-self.reactivated_hand_position[1])*self.mouse_sensitivity
-
-            self.prev = [x_new,y_new]
             
             # prevent buffer from growing too large
             if len(self.cursor_buffer_x) >= self.smoothing + 1:
@@ -146,7 +142,6 @@ class DesktopPenInput:
 
     def update_desktop_cursor(self, x, y,cursor_is_active:bool=True):
         self.update_cursor_xy(x, y,cursor_is_active)
-        self.penInput.get_previous_coordinates([int(i) for i in self.prev])
 
     def update_pressure(self, pressure):
         self.pressure = pressure
