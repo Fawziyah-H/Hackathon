@@ -147,8 +147,6 @@ class Pen():
         if (self.dev) is not None:
             print("Initalised Pen Input")
 
-        #Store previous coordinates of pointer device (need for ink strokes/drag)
-        self.prev = []
 
     def pentap(self,coordinates : Array,pressure,erase):
         '''Single pen tap at given coordinates'''
@@ -206,9 +204,6 @@ class Pen():
         windll.user32.InjectSyntheticPointerInput (self.dev , self.pointerTypeInfo,1)
 
         self.mousejiggle(coordinates)
-
-    def get_previous_coordinates(self, prev: Array):
-        self.prev = prev
 
     def update_pen_info(self, coordinates: Array, pressure):
         '''Sets updated coordinates and pressure for ink strokes'''

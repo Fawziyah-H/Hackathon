@@ -1,3 +1,4 @@
+from textwrap import wrap
 from tkinter import *
 import tkinter.ttk as tkk
 from calibration import Calibrate
@@ -105,9 +106,10 @@ class HelpPage(Frame):
         backBtn = Button(self, text="Back", command=lambda: controller.showFrame(MainMenu), background=btncolour, font=(btnFont,12))
         backBtn.place(x=50,y=500)
 
-        txt = Text(self, width=30, height=10, font=("Calibri",15), bg=bgcolour, bd=0)
-        txt.place(x=150,y=150)
-        txt.insert(INSERT, "How to use:\n\n1.Calibrate pressure\n2.Start inking!\n3.Enjoy!")
+        txt = Text(self, width=40, height=10, font=("Calibri",15), bg=bgcolour, bd=0, wrap=WORD)
+        txt.place(x=130,y=150)
+        txt.insert(INSERT, "How to use:\n\n1. Configure Settings to your preference\n2. Click the Start Inking button\n3. Open a Windows Inking application (e.g: Paint 3D)\
+            \n4. To draw, pinch your thumb and index finger and move your hand\n5. To use eraser, pinch your middle finger and thumb")
         txt.configure(state='disabled')
 
 
