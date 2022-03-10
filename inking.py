@@ -2,11 +2,11 @@ import cv2
 import mediapipe as mp
 from desktop_pen import DesktopPenInput
 from hand import Hand
+from area_of_interest import AreaOfInterest
 from simple_pinch import SimplePinch
 from middle_pinch import MiddlePinch
 from geom_tools import distance_xyz
-from win32api import GetSystemMetrics
-from win32con import SM_CXVIRTUALSCREEN, SM_CYVIRTUALSCREEN
+
 
 class DigitalInking():
 
@@ -15,8 +15,7 @@ class DigitalInking():
         self.cap.set(3, 640)
         self.cap.set(4, 480)
 
-        self.screen_width = GetSystemMetrics(SM_CXVIRTUALSCREEN)
-        self.screen_height = GetSystemMetrics(SM_CYVIRTUALSCREEN)
+        self.aoi = AreaOfInterest(self.cap)
 
         self.handdata_raw = {
         "Left": None,
@@ -35,7 +34,6 @@ class DigitalInking():
             self.domHand = Hand(self.handdata_raw['Right'])
         elif self.dominant == "Left":
             self.domHand = Hand(self.handdata_raw['Left'])
-        #NOTE might need else statement for invalid domHand value?
 
         self.counter = 0
 
@@ -89,8 +87,7 @@ class DigitalInking():
                     clicked = self.pinch.clicked
                     eraser = self.middlePinch.clicked
 
-                newX = self.domHand.index_tip.x * self.screen_width
-                newY = self.domHand.index_tip.y * self.screen_height
+                newX, newY = self.aoi.convert_xy(self.domHand.index_tip.x, self.domHand.index_tip.y)
 
                 self.mouse.update_desktop_cursor(newX,newY)
                 self.mouse.update_pressure(int(new_pressure))

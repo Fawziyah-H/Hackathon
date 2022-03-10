@@ -1,4 +1,3 @@
-from textwrap import wrap
 from tkinter import *
 import tkinter.ttk as tkk
 from calibration import Calibrate
