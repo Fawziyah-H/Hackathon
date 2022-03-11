@@ -11,3 +11,6 @@ The written step-by-step guide can be found here:
 For queries, suggestions, or more information, please contact us via email:<br/>
 Fawziyah Hussain: fawziyah.hussain.20@ucl.ac.uk<br/>
 Eva Miah: eva.miah.20@ucl.ac.uk<br/>
+
+## REFERENCES
+This project is a small part of the current work we are doing for the wider MotionInput project, which is currently being developed by UCL staff and students. You can find more information about this here: https://ashildkummen.github.io/MotionInput-website/
