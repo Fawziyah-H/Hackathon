@@ -1,5 +1,5 @@
 # Digital Inking with Gesture Recognition
-This is a digital inking program for Windowa written in Python. It uses gesture recognition via a webcam to allow in-air inking, and enables pressure sensitivity and depth through hand distance calculations. To compile the code into an executable file, please refer to the compilation guide.
+This is a digital inking program for Windows written in Python. It uses gesture recognition via a webcam to allow in-air inking, and enables pressure sensitivity and depth through hand distance calculations. To compile the code into an executable file, please refer to the compilation guide.
 
 
 ## USER GUIDE
