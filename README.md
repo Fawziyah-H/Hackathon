@@ -4,7 +4,7 @@ This is a digital inking program for Windows written in Python. It uses gesture 
 
 ## USER GUIDE
 A video tutorial is available here: https://youtu.be/10uO7vXew2o<br/>
-The written step-by-step guide can be found here:
+The written step-by-step guide can be found [here](https://liveuclac-my.sharepoint.com/:w:/g/personal/zcabsem_ucl_ac_uk/EfIUeUjvewdKkv2dmE9Fk1gBbhO1-2LSroSmXMPLJVyKxQ?e=chiBQi").
 
 
 ## CONTACT INFORMATION
